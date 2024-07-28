@@ -4,7 +4,6 @@ This repository contains a simple HTTP server implemented in Rust. The server li
 
 ## Features
 
-- Serves static HTML pages from a `./public` directory.
 - Handles GET requests to `/`, `/second`, and `/api` endpoints.
 - Returns a custom 404 page for unknown routes.
 - Uses multithreading to handle multiple client connections concurrently.
