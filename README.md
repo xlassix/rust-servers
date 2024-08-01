@@ -20,7 +20,7 @@ Welcome to the Rust Webserver Collection, a curated repository showcasing a vari
 - **Features**: Request validation, middleware composition, and error handling.
 - **Status**: In Progress
 
-### 4. Rocket (Coming Soon)
+### 4. Rocket
 - **Description**: Rocket is a web framework for Rust that makes it simple to write fast, secure web applications without sacrificing flexibility, usability, or type safety.
 - **Features**: Automatic request validation, template rendering, and easy routing.
 - **Status**: Planned
