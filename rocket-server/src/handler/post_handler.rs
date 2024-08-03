@@ -44,7 +44,7 @@ pub async fn create_post(
     _db: &State<DBPool>,
     body: Json<NewPostDto<'_>>,
     key: Result<JWT, NetworkResponse>,
-) -> Result<Value, NetworkResponse> {
+) -> Result<NetworkResponse, NetworkResponse> {
     let _jwt = key?;
 
     let post_request = body.into_inner();
@@ -53,7 +53,7 @@ pub async fn create_post(
     let response = post_service::create_post(_db, &post_request,&_jwt.claims.user_id).await;
 
     match response {
-        Ok(value) => Ok(value),
+        Ok(value) => Ok(NetworkResponse::Created(value)),
         Err(err) => Err(err),
     }
 }

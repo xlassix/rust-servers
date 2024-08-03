@@ -98,7 +98,6 @@ pub struct UpdatePostDto<'a> {
     pub id:  &'a str,
     pub title: &'a str,
     pub body: &'a str,
-    pub published: bool,
 }
 
 impl<'a> NewPostDto<'a> {
