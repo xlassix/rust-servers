@@ -30,7 +30,7 @@ pub async fn login(
 pub async fn register(
     _db: &State<DBPool>,
     body: Json<AuthPayload<'_>>,
-) -> Result<Json<Value>, NetworkResponse> {
+) -> Result<NetworkResponse, NetworkResponse> {
 
 
     let post_request = body.into_inner();
@@ -39,7 +39,7 @@ pub async fn register(
     let response = user_service::register(_db,&post_request).await;
 
     match response {
-        Ok(value) => Ok(Json(value)),
+        Ok(value) => Ok(NetworkResponse::Created(value)),
         Err(err) => Err(err),
     }
 }
