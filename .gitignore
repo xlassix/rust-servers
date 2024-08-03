@@ -309,3 +309,4 @@ var/
 wheels/
 pip-wheel-metadata/
 share/python-wig
+.env
