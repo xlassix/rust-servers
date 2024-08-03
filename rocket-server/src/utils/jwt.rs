@@ -6,7 +6,7 @@ use jsonwebtoken::{
 use std::env;
 
 pub fn create_jwt(id: String) -> Result<String, Error> {
-    let secret = env::var("SECRET").expect("JWT SECRET must be set");
+    let secret = env::var("JWT_SECRET").expect("JWT SECRET must be set");
 
     let expiration = get_current_timestamp() + 604800;
 
@@ -25,7 +25,7 @@ pub fn create_jwt(id: String) -> Result<String, Error> {
 }
 
 pub fn decode_jwt(token: String) -> Result<Claims, ErrorKind> {
-    let secret = env::var("SECRET").expect("JWT SECRET must be set");
+    let secret = env::var("JWT_SECRET").expect("JWT SECRET must be set");
     let token = token.trim_start_matches("Bearer").trim();
 
     match decode::<Claims>(
