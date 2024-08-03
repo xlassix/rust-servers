@@ -16,6 +16,8 @@ pub enum NetworkResponse {
     Unauthorized(Value),
     #[response(status = 404)]
     NotFound(Value),
+    #[response(status = 422)]
+    Status422(Value),
     #[response(status = 409)]
     Conflict(Value),
     #[response(status = 500)]
@@ -35,6 +37,12 @@ pub enum ResponseBody {
 #[serde(crate = "rocket::serde")]
 pub struct Response {
     pub body: ResponseBody,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
+pub struct ResponseData {
+    pub data: Value,
 }
 
 #[derive(Serialize, Deserialize)]

@@ -1,7 +1,7 @@
 use crate::utils::db_connection::{get_conn, DBPool};
 
 use crate::models::db::{NewPost, NewPostDto, Post, UpdatePostDto};
-use crate::models::response::{CustomError, NetworkResponse};
+use crate::models::response::{CustomError, NetworkResponse, ResponseData};
 
 use rocket::serde::json::{json, Json, Value};
 use rocket::State;
@@ -11,7 +11,7 @@ use crate::schema::posts::dsl::*;
 
 use diesel::prelude::*;
 
-pub async fn get_posts(_db: &State<DBPool>) -> Result<Value, NetworkResponse> {
+pub async fn get_posts_all(_db: &State<DBPool>) -> Result<Value, NetworkResponse> {
     let mut conn = get_conn(_db)?;
 
     let result = posts::table
@@ -20,7 +20,33 @@ pub async fn get_posts(_db: &State<DBPool>) -> Result<Value, NetworkResponse> {
         .map_err(CustomError::from);
 
     match result {
-        Ok(res) => Ok(json!(res)),
+        Ok(res) => {
+            let response =ResponseData{
+                data:json!(res)
+            };
+            Ok(json!(response))
+        },
+        Err(err) => Err(NetworkResponse::from(err)),
+    }
+}
+
+
+pub async fn get_my_posts(_db: &State<DBPool>, _user_id: &String) -> Result<Value, NetworkResponse> {
+    let mut conn = get_conn(_db)?;
+
+
+    let result = posts::table
+        .filter(user_id.eq(&_user_id.trim()))
+        .load::<Post>(&mut conn)
+        .map_err(CustomError::from);
+
+    match result {
+        Ok(res) => {
+            let response =ResponseData{
+                data:json!(res)
+            };
+            Ok(json!(response))
+            },
         Err(err) => Err(NetworkResponse::from(err)),
     }
 }
@@ -28,6 +54,7 @@ pub async fn get_posts(_db: &State<DBPool>) -> Result<Value, NetworkResponse> {
 pub async fn create_post(
     _db: &State<DBPool>,
     post_request: &NewPostDto<'_>,
+    _user_id: &String,
 ) -> Result<Value, NetworkResponse> {
     let mut conn = get_conn(_db)?;
 
@@ -40,7 +67,7 @@ pub async fn create_post(
         id: &cuid,
         title: post_request.title,
         body: post_request.body,
-        user_id:"",
+        user_id:_user_id,
     };
 
     let result: Result<Post, CustomError> = diesel::insert_into(posts::table)
@@ -48,8 +75,13 @@ pub async fn create_post(
         .get_result(&mut conn)
         .map_err(CustomError::from);
 
+
     match result {
-        Ok(post) => Ok(json!(post)),
+        Ok(post) => {
+            let response =ResponseData{
+                data:json!(post)
+            };
+            Ok(json!(response))},
         Err(err) => Err(NetworkResponse::from(err)),
     }
 }
